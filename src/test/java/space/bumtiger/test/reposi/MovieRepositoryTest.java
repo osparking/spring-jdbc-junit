@@ -1,5 +1,7 @@
 package space.bumtiger.test.reposi;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.time.LocalDate;
 import java.time.Month;
 

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "tbl_movies")
+@Table(name = "TBL_MOVIES")
 public class Movie {
 	
 	@Id

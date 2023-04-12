@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.time.LocalDate;
 import java.time.Month;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
@@ -19,6 +20,7 @@ public class MovieRepositoryTest {
 	private MovieRepository repository;
 
 	@Test
+	@DisplayName("영화가 DB에 저장됨")
 	void save() {
 		// Arrange
 		var movie = new Movie();

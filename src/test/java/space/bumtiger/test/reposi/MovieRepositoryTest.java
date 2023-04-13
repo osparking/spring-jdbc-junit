@@ -3,6 +3,7 @@ package space.bumtiger.test.reposi;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -20,6 +21,40 @@ public class MovieRepositoryTest {
 
 	@Autowired
 	private MovieRepository repository;
+	
+	@Test
+	@DisplayName("영화 삭제 성공")
+	void deleteMovie() {
+		// arrange
+		var movie = new Movie();
+		movie.setName("율돌목");
+		String genera = "전쟁";
+		movie.setGenera(genera);
+		var relDate = LocalDate.of(2009, Month.NOVEMBER, 10);
+		movie.setReleaseDate(relDate);
+		Movie firstMovie = repository.save(movie);
+		
+		movie = new Movie();
+		movie.setName("율돌목");
+		movie.setGenera(genera);
+		movie.setReleaseDate(relDate);
+		repository.save(movie); // save movie again
+		
+		// act
+		repository.delete(firstMovie);
+		
+		// assert
+		var optionalMovie = repository.findById(firstMovie.getId());
+		assertTrue(optionalMovie.isEmpty());
+		
+		int count = 0;
+		var movies = repository.findAll();
+		var iter = movies.iterator();
+		while (iter.hasNext()) {
+			count++;
+		}
+		assertThat(count).isEqualTo(1);
+	}
 
 	@Test
 	@DisplayName("영화 장르 갱신 성공")

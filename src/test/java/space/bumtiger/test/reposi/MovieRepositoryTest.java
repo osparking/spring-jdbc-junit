@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Collection;
+import java.util.stream.StreamSupport;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +23,32 @@ public class MovieRepositoryTest {
 
 	@Autowired
 	private MovieRepository repository;
+	
+	@Test
+	@DisplayName("쟝르 영화 검색 성공")
+	void findRomanceMovie() {
+		// arrange
+		var movie = new Movie();
+		movie.setName("율돌목");
+		String genera = "역사";
+		movie.setGenera(genera);
+		var relDate = LocalDate.of(2009, Month.NOVEMBER, 10);
+		movie.setReleaseDate(relDate);
+		repository.save(movie);
+		
+		movie = new Movie();
+		movie.setName("춘향전");
+		movie.setGenera("로맨스");
+		movie.setReleaseDate(relDate);
+		repository.save(movie); 
+		
+		// act
+		var romances = repository.findByGenera("로맨스");
+		
+		// assert
+		assertNotNull(romances);
+		assertThat(romances.size()).isEqualTo(1);
+	}
 	
 	@Test
 	@DisplayName("영화 삭제 성공")

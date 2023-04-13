@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import space.bumtiger.test.model.Movie;
 
 @DataJdbcTest
+@DisplayName("DB 영화 테이블 연산")
 public class MovieRepositoryTest {
 
 	@Autowired

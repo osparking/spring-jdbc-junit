@@ -1,6 +1,7 @@
 package space.bumtiger.test.reposi;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.LocalDate;
@@ -20,6 +21,31 @@ public class MovieRepositoryTest {
 	@Autowired
 	private MovieRepository repository;
 
+	@Test
+	@DisplayName("영화 장르 갱신 성공")
+	void updateMovie() {
+		// arrange
+		var movie = new Movie();
+		movie.setName("율돌목");
+		String genera = "전쟁";
+		movie.setGenera(genera);
+		var relDate = LocalDate.of(2009, Month.NOVEMBER, 10);
+		movie.setReleaseDate(relDate);
+		repository.save(movie);
+		var foundMovie = repository.findById(movie.getId());
+		
+		// act
+		String newGenere = "역사";
+		foundMovie.ifPresent(m -> m.setGenera(newGenere));
+		repository.save(foundMovie.get());
+		foundMovie = repository.findById(movie.getId());
+		
+		// assert
+		assertNotNull(foundMovie);
+		assertThat(foundMovie.get().getGenera()).isEqualTo(newGenere);
+		assertNotEquals(movie.getGenera(), foundMovie.get().getGenera());
+	}
+	
 	@Test
 	@DisplayName("영화가 ID로 찾아짐")
 	void findMovieById() {

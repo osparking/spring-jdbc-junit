@@ -2,6 +2,7 @@ package space.bumtiger.test.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -42,6 +43,19 @@ class MovieServiceTest {
 		yulDolMok.setName("울돌목");
 		yulDolMok.setGenera("역사");
 		yulDolMok.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
+	}
+	
+	@Test
+	@DisplayName("없는 ID는 예외를 발생시킨다")
+	void invalidIdCauseException() {
+		// arrange : done by beforeEach annotated method
+		// act
+		when(repository.findById(1L)).thenReturn (Optional.of(yulDolMok));
+		
+		// assert
+		assertThrows(RuntimeException.class, () -> {
+			service.getMovieById(2L);
+		});
 	}
 
 	@Test

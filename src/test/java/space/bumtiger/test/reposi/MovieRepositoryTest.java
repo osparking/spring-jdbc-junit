@@ -25,73 +25,49 @@ public class MovieRepositoryTest {
 
 	private Movie yulDolMok;
 	private Movie chunHyangJeon;
-	
+
 	@BeforeEach
-	void makeMovies () {
+	void makeMovies() {
 		yulDolMok = new Movie();
 		yulDolMok.setName("율돌목");
 		yulDolMok.setGenera("역사");
-		yulDolMok.setReleaseDate(
-				LocalDate.of(2009, Month.NOVEMBER, 10));
-		
+		yulDolMok.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
+
 		chunHyangJeon = new Movie();
 		chunHyangJeon.setName("춘향전");
 		chunHyangJeon.setGenera("로맨스");
-		chunHyangJeon.setReleaseDate(
-				LocalDate.of(2009, Month.NOVEMBER, 10));
+		chunHyangJeon.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
 	}
-	
+
 	@Test
 	@DisplayName("쟝르 영화 검색 성공")
 	void findRomanceMovie() {
 		// arrange
-		var movie = new Movie();
-		movie.setName("율돌목");
-		String genera = "역사";
-		movie.setGenera(genera);
-		var relDate = LocalDate.of(2009, Month.NOVEMBER, 10);
-		movie.setReleaseDate(relDate);
-		repository.save(movie);
-		
-		movie = new Movie();
-		movie.setName("춘향전");
-		movie.setGenera("로맨스");
-		movie.setReleaseDate(relDate);
-		repository.save(movie); 
-		
+		repository.save(yulDolMok);
+		repository.save(chunHyangJeon);
+
 		// act
 		var romances = repository.findByGenera("로맨스");
-		
+
 		// assert
 		assertNotNull(romances);
 		assertThat(romances.size()).isEqualTo(1);
 	}
-	
+
 	@Test
 	@DisplayName("영화 삭제 성공")
 	void deleteMovie() {
 		// arrange
-		var movie = new Movie();
-		movie.setName("율돌목");
-		String genera = "전쟁";
-		movie.setGenera(genera);
-		var relDate = LocalDate.of(2009, Month.NOVEMBER, 10);
-		movie.setReleaseDate(relDate);
-		Movie firstMovie = repository.save(movie);
-		
-		movie = new Movie();
-		movie.setName("율돌목");
-		movie.setGenera(genera);
-		movie.setReleaseDate(relDate);
-		repository.save(movie); // save movie again
-		
+		Movie firstMovie = repository.save(yulDolMok);
+		repository.save(chunHyangJeon); // save movie again
+
 		// act
 		repository.delete(firstMovie);
-		
+
 		// assert
 		var optionalMovie = repository.findById(firstMovie.getId());
 		assertTrue(optionalMovie.isEmpty());
-		
+
 		int count = 0;
 		var movies = repository.findAll();
 		var iter = movies.iterator();
@@ -105,64 +81,44 @@ public class MovieRepositoryTest {
 	@DisplayName("영화 장르 갱신 성공")
 	void updateMovie() {
 		// arrange
-		var movie = new Movie();
-		movie.setName("율돌목");
-		String genera = "전쟁";
-		movie.setGenera(genera);
-		var relDate = LocalDate.of(2009, Month.NOVEMBER, 10);
-		movie.setReleaseDate(relDate);
-		repository.save(movie);
-		var foundMovie = repository.findById(movie.getId());
-		
+		repository.save(yulDolMok);
+		var foundMovie = repository.findById(yulDolMok.getId());
+
 		// act
-		String newGenere = "역사";
+		String newGenere = "전쟁사";
 		foundMovie.ifPresent(m -> m.setGenera(newGenere));
 		repository.save(foundMovie.get());
-		foundMovie = repository.findById(movie.getId());
-		
+		foundMovie = repository.findById(yulDolMok.getId());
+
 		// assert
 		assertNotNull(foundMovie);
 		assertThat(foundMovie.get().getGenera()).isEqualTo(newGenere);
-		assertNotEquals(movie.getGenera(), foundMovie.get().getGenera());
+		assertNotEquals(yulDolMok.getGenera(), foundMovie.get().getGenera());
 	}
-	
+
 	@Test
 	@DisplayName("영화가 ID로 찾아짐")
 	void findMovieById() {
 		// Arrange
-		var movie = new Movie();
-		movie.setName("율돌목");
-		String genera = "전쟁";
-		movie.setGenera(genera);
-		var relDate = LocalDate.of(2009, Month.NOVEMBER, 10);
-		movie.setReleaseDate(relDate);
-		var savedMovie = repository.save(movie);
-		
+		var savedMovie = repository.save(yulDolMok);
+
 		// Act
 		var foundMovie = repository.findById(savedMovie.getId());
-		
+
 		// Assert
 		assertNotNull(foundMovie);
 		Movie fMovie = foundMovie.isPresent() ? foundMovie.get() : null;
-		assertThat(fMovie.getGenera()).isEqualTo(genera);
-		assertThat(fMovie.getReleaseDate()).isAfter(relDate.minusDays(1L));
+		assertThat(fMovie.getGenera()).isEqualTo(yulDolMok.getGenera());
+		assertThat(fMovie.getReleaseDate())
+				.isAfter(yulDolMok.getReleaseDate().minusDays(1L));
 	}
 
 	@Test
 	@DisplayName("영화 2 건이 읽혀질 것임")
 	void fetchAll() {
 		// Arrange
-		var movie = new Movie();
-		movie.setName("율돌목");
-		movie.setGenera("전쟁");
-		movie.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
-		repository.save(movie);
-
-		movie = new Movie();
-		movie.setName("율돌목");
-		movie.setGenera("전쟁");
-		movie.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
-		repository.save(movie);
+		repository.save(yulDolMok);
+		repository.save(chunHyangJeon);
 
 		// act
 		Iterable<Movie> movies = repository.findAll();
@@ -185,13 +141,8 @@ public class MovieRepositoryTest {
 	@DisplayName("영화가 DB에 저장됨")
 	void save() {
 		// Arrange
-		var movie = new Movie();
-		movie.setName("율돌목");
-		movie.setGenera("전쟁");
-		movie.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
-
 		// Act
-		var savedMovie = repository.save(movie);
+		var savedMovie = repository.save(yulDolMok);
 
 		// Assert
 		assertNotNull(savedMovie);

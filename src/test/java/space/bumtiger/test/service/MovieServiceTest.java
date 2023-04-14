@@ -1,5 +1,8 @@
 package space.bumtiger.test.service;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import java.time.LocalDate;
 import java.time.Month;
 
@@ -28,6 +31,7 @@ class MovieServiceTest {
 		yulDolMok.setGenera("역사");
 		yulDolMok.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
 		
+		when(repository.save(any(Movie.class))).thenReturn(yulDolMok);
 	}
 
 }

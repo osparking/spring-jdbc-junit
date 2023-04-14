@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.time.LocalDate;
 import java.time.Month;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,24 @@ public class MovieRepositoryTest {
 
 	@Autowired
 	private MovieRepository repository;
+
+	private Movie yulDolMok;
+	private Movie chunHyangJeon;
+	
+	@BeforeEach
+	void makeMovies () {
+		yulDolMok = new Movie();
+		yulDolMok.setName("율돌목");
+		yulDolMok.setGenera("역사");
+		yulDolMok.setReleaseDate(
+				LocalDate.of(2009, Month.NOVEMBER, 10));
+		
+		chunHyangJeon = new Movie();
+		chunHyangJeon.setName("춘향전");
+		chunHyangJeon.setGenera("로맨스");
+		chunHyangJeon.setReleaseDate(
+				LocalDate.of(2009, Month.NOVEMBER, 10));
+	}
 	
 	@Test
 	@DisplayName("쟝르 영화 검색 성공")

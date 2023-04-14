@@ -11,6 +11,8 @@ import java.time.Month;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 
@@ -18,6 +20,7 @@ import space.bumtiger.test.model.Movie;
 
 @DataJdbcTest
 @DisplayName("DB 영화 테이블 연산")
+@ExtendWith(MockitoExtension.class)
 public class MovieRepositoryTest {
 
 	@Autowired

@@ -27,7 +27,7 @@ public class MovieService {
 
 	public Movie updateMovie(Movie movie, Long id) {
 		Movie existingMovie = movieRepository.findById(id).get();
-		existingMovie.setGenera(movie.getGenera());
+//		existingMovie.setGenera(movie.getGenera());
 		existingMovie.setName(movie.getName());
 		existingMovie.setReleaseDate(movie.getReleaseDate());
 		return movieRepository.save(existingMovie);

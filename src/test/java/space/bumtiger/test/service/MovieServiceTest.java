@@ -6,6 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -47,6 +50,20 @@ class MovieServiceTest {
 	}
 
 	@Test
+	@DisplayName("영화를 삭제 DB 자료가 바뀐다.")
+	void deleteTest() {
+		// arrange: done
+		// act
+		when(repository.findById(anyLong())).thenReturn(Optional.of(yulDolMok));
+		doNothing().when(repository).delete(any(Movie.class));
+		
+		service.deleteMovie(1L);
+		
+		// assert
+		verify(repository, times(1)).delete(yulDolMok);	
+	}
+
+	@Test
 	@DisplayName("영화를 갱신하면 DB 자료가 바뀐다.")
 	void updateTest() throws CloneNotSupportedException {
 		// arrange: done
@@ -55,11 +72,11 @@ class MovieServiceTest {
 		personMovie.setGenera("인물");
 		when(repository.findById(anyLong())).thenReturn(Optional.of(yulDolMok));
 		when(repository.save(any(Movie.class))).thenReturn(personMovie);
-		
+
 		Movie updatedMovie = service.updateMovie(yulDolMok, yulDolMok.getId());
 		assertNotNull(updatedMovie);
 		assertEquals(updatedMovie.getName(), yulDolMok.getName());
-		assertThat(updatedMovie.getGenera()).isEqualTo("인물");		
+		assertThat(updatedMovie.getGenera()).isEqualTo("인물");
 	}
 
 	@Test

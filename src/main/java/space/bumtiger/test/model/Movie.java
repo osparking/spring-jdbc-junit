@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "TBL_MOVIES")
-public class Movie {
+public class Movie implements Cloneable{
 	
 	@Id
 	private Long id;
@@ -23,4 +23,8 @@ public class Movie {
 	private String genera;
 	
 	private LocalDate releaseDate;
+	
+	public Movie clone() throws CloneNotSupportedException {
+		return (Movie) super.clone();
+	}
 }

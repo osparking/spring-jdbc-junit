@@ -1,6 +1,7 @@
 package space.bumtiger.test.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -35,7 +36,7 @@ class MovieServiceTest {
 	private MovieRepository repository;
 
 	private Movie yulDolMok;
-	
+
 	@BeforeEach
 	void createMovie() {
 		yulDolMok = new Movie();
@@ -44,7 +45,23 @@ class MovieServiceTest {
 		yulDolMok.setGenera("역사");
 		yulDolMok.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
 	}
-	
+
+	@Test
+	@DisplayName("영화를 갱신하면 DB 자료가 바뀐다.")
+	void updateTest() throws CloneNotSupportedException {
+		// arrange: done
+		// act
+		Movie personMovie = yulDolMok.clone();
+		personMovie.setGenera("인물");
+		when(repository.findById(anyLong())).thenReturn(Optional.of(yulDolMok));
+		when(repository.save(any(Movie.class))).thenReturn(personMovie);
+		
+		Movie updatedMovie = service.updateMovie(yulDolMok, yulDolMok.getId());
+		assertNotNull(updatedMovie);
+		assertEquals(updatedMovie.getName(), yulDolMok.getName());
+		assertThat(updatedMovie.getGenera()).isEqualTo("인물");		
+	}
+
 	@Test
 	@DisplayName("없는 ID는 예외를 발생시킨다")
 	void invalidIdCauseException() {
@@ -70,7 +87,7 @@ class MovieServiceTest {
 		assertNotNull(movie);
 		assertThat(movie.getId()).isEqualTo(1L);
 	}
-	
+
 	@Test
 	@DisplayName("영화 2 건 목록이 반환된다")
 	void getMovies() {

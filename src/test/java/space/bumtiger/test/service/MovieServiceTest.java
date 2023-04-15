@@ -44,11 +44,13 @@ class MovieServiceTest {
 	@BeforeEach
 	void makeMovies() {
 		yulDolMok = new Movie();
+		yulDolMok.setId(1L);
 		yulDolMok.setName("율돌목");
 		yulDolMok.setGenera("역사");
 		yulDolMok.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
 
 		chunHyangJeon = new Movie();
+		chunHyangJeon.setId(2L);
 		chunHyangJeon.setName("춘향전");
 		chunHyangJeon.setGenera("로맨스");
 		chunHyangJeon.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));

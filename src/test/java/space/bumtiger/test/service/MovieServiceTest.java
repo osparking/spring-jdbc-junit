@@ -39,14 +39,19 @@ class MovieServiceTest {
 	private MovieRepository repository;
 
 	private Movie yulDolMok;
+	private Movie chunHyangJeon;
 
 	@BeforeEach
-	void createMovie() {
+	void makeMovies() {
 		yulDolMok = new Movie();
-		yulDolMok.setId(1L);
-		yulDolMok.setName("울돌목");
+		yulDolMok.setName("율돌목");
 		yulDolMok.setGenera("역사");
 		yulDolMok.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
+
+		chunHyangJeon = new Movie();
+		chunHyangJeon.setName("춘향전");
+		chunHyangJeon.setGenera("로맨스");
+		chunHyangJeon.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
 	}
 
 	@Test
@@ -108,18 +113,6 @@ class MovieServiceTest {
 	@Test
 	@DisplayName("영화 2 건 목록이 반환된다")
 	void getMovies() {
-		var yulDolMok = new Movie();
-		yulDolMok.setId(2L);
-		yulDolMok.setName("율돌목");
-		yulDolMok.setGenera("역사");
-		yulDolMok.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
-
-		var chunHyangJeon = new Movie();
-		chunHyangJeon.setId(2L);
-		chunHyangJeon.setName("춘향전");
-		chunHyangJeon.setGenera("로맨스");
-		chunHyangJeon.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
-
 		List<Movie> movies = new ArrayList<Movie>();
 		movies.add(yulDolMok);
 		movies.add(chunHyangJeon);
@@ -134,12 +127,6 @@ class MovieServiceTest {
 	@Test
 	@DisplayName("영화 객체를 DB 에 저장한다")
 	void save() {
-		var yulDolMok = new Movie();
-		yulDolMok.setId(2L);
-		yulDolMok.setName("율돌목");
-		yulDolMok.setGenera("역사");
-		yulDolMok.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
-
 		when(repository.save(any(Movie.class))).thenReturn(yulDolMok);
 
 		var saved1 = service.save(yulDolMok);

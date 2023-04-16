@@ -3,6 +3,7 @@ package space.bumtiger.test.controller;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -57,6 +58,23 @@ class MovieControllerTest {
 		chunHyangJeon.setGenera("로맨스");
 		chunHyangJeon.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
 	}
+
+	@Test
+	@DisplayName("영화를 ID로 읽으면 바로 영화 1 건 올라온다.")
+	void readMovieByIdTest() throws Exception {
+		// arrange
+		// act and expect(=assert)
+		// @formatter:off -- act and expect(=assert)
+		when(service.getMovieById(anyLong())).thenReturn(yulDolMok);
+		
+		mockMvc.perform
+		(get("/movies/{id}", 1L))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.name", is(yulDolMok.getName())))
+			.andExpect(jsonPath("$.genera", is(yulDolMok.getGenera())))
+			.andExpect(jsonPath("$.releaseDate", 
+					is(yulDolMok.getReleaseDate().toString())));
+	}
 	
 	@Test
 	@DisplayName("모든 영화 읽으면 2 건이 올라온다.")
@@ -79,7 +97,6 @@ class MovieControllerTest {
 	@DisplayName("영화 생성하면 DB에 저장된다.")
 	void createTest() throws Exception {
 		// arrange
-		// @formatter:off -- act and expect(=assert)
 		when(service.save(any(Movie.class))).thenReturn(yulDolMok);
 		
 		mockMvc.perform
@@ -89,7 +106,8 @@ class MovieControllerTest {
 		).andExpect(status().isCreated())
 		 .andExpect(jsonPath("$.name", is(yulDolMok.getName())))
 		 .andExpect(jsonPath("$.genera", is(yulDolMok.getGenera())))
-		 .andExpect(jsonPath("$.releaseDate", is(yulDolMok.getReleaseDate())));
+		 .andExpect(jsonPath("$.releaseDate", 
+				 is(yulDolMok.getReleaseDate().toString())));
 		// @formatter:on
 	}
 }

@@ -1,14 +1,18 @@
 package space.bumtiger.test.controller;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -52,6 +56,23 @@ class MovieControllerTest {
 		chunHyangJeon.setName("춘향전");
 		chunHyangJeon.setGenera("로맨스");
 		chunHyangJeon.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
+	}
+	
+	@Test
+	@DisplayName("모든 영화 읽으면 2 건이 올라온다.")
+	void readAllMoviesTest() throws Exception {
+		// arrange
+		List<Movie> movieList = new ArrayList<Movie>();
+		movieList.add(chunHyangJeon);
+		movieList.add(yulDolMok);
+		
+		// act and expect(=assert)
+		when(service.getAllMovies()).thenReturn(movieList);
+		
+		mockMvc.perform
+		(get("/movies"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.*", hasSize(movieList.size())));
 	}
 
 	@Test

@@ -48,6 +48,7 @@ class MovieControllerTest {
 		yulDolMok.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
 
 		chunHyangJeon = new Movie();
+		chunHyangJeon.setId(2L);
 		chunHyangJeon.setName("춘향전");
 		chunHyangJeon.setGenera("로맨스");
 		chunHyangJeon.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));

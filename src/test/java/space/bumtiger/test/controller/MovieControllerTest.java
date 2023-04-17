@@ -4,7 +4,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -44,6 +46,9 @@ class MovieControllerTest {
 	private Movie yulDolMok;
 	private Movie chunHyangJeon;
 
+	/**
+	 * Executes before each test method.
+	 */
 	@BeforeEach
 	void makeMovies() {
 		yulDolMok = new Movie();
@@ -60,8 +65,22 @@ class MovieControllerTest {
 	}
 
 	@Test
+	@DisplayName("영화를 ID 주며 삭제하면 내용이 없다.")
+	void deleteMovieTest() throws Exception {
+		// arrange - save yulDolMok movie
+		service.save(yulDolMok);
+		
+		doNothing().when(service).deleteMovie(anyLong());
+		
+		// delete movie by ID
+		mockMvc.perform
+		(delete("/movies/{id}", yulDolMok.getId()))
+				.andExpect(status().isNoContent());
+	}
+
+	@Test
 	@DisplayName("영화를 ID로 읽으면 바로 영화 1 건 올라온다.")
-	void readMovieByIdTest() throws Exception {
+ 	void readMovieByIdTest() throws Exception {
 		// arrange
 		// act and expect(=assert)
 		// @formatter:off -- act and expect(=assert)

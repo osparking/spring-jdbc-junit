@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -62,6 +63,29 @@ class MovieControllerTest {
 		chunHyangJeon.setName("춘향전");
 		chunHyangJeon.setGenera("로맨스");
 		chunHyangJeon.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
+	}
+	
+	@Test
+	@DisplayName("영화를 갱신한 뒤 DB 값이 바뀐다.")
+	void updateMovieTest() throws Exception {
+		// arrange - save yulDolMok movie
+		service.save(yulDolMok);
+		
+		// @formatter:off -- act and expect(=assert)
+		when(service.updateMovie(any(Movie.class), anyLong()))
+			.thenReturn(yulDolMok);
+		yulDolMok.setGenera("인물");
+		
+		mockMvc.perform
+		(put("/movies/{id}", yulDolMok.getId())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(yulDolMok))
+				)
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.name", is(yulDolMok.getName())))
+			.andExpect(jsonPath("$.genera", is(yulDolMok.getGenera())))
+			.andExpect(jsonPath("$.releaseDate", 
+					is(yulDolMok.getReleaseDate().toString())));
 	}
 
 	@Test

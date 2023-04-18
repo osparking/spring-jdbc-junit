@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -29,6 +30,27 @@ public class IntegrateTest {
 	private MovieRepository repository;
 
 	@Test
+	@DisplayName("집적 시험 - 영화 목록")
+	void shouldReadListTest() {
+		Movie yulDolMok = new Movie();
+		yulDolMok.setName("율돌목");
+		yulDolMok.setGenera("역사");
+		yulDolMok.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
+		restTemplate.postForObject(baseUrl, yulDolMok, Movie.class);
+
+		Movie chunHyangJeon = new Movie();
+		chunHyangJeon.setName("춘향전");
+		chunHyangJeon.setGenera("로맨스");
+		chunHyangJeon.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
+		restTemplate.postForObject(baseUrl, chunHyangJeon, Movie.class);
+
+		Movie[] savedMovie = restTemplate.getForObject(baseUrl, Movie[].class);
+
+		assertNotNull(savedMovie);
+		assertThat(savedMovie.length).isEqualTo(2);
+	}
+
+	@Test
 	@DisplayName("집적 시험 - 영화 저장")
 	void shouldCreateMovieTest() {
 		Movie yulDolMok = new Movie();
@@ -38,7 +60,7 @@ public class IntegrateTest {
 
 		Movie savedMovie = restTemplate.postForObject(baseUrl, yulDolMok,
 				Movie.class);
-		
+
 		assertNotNull(savedMovie);
 		assertThat(savedMovie.getId()).isNotNull();
 	}

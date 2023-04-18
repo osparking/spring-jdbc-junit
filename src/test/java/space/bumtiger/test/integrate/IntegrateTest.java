@@ -30,6 +30,28 @@ public class IntegrateTest {
 	private MovieRepository repository;
 
 	@Test
+	@DisplayName("집적 시험 - 영화 ID로 찾기")
+	void shouldFindMovieByIdTest() {
+		
+		// arrange - 영화 생성, 저장, ID 확보
+		Movie yulDolMok = new Movie();
+		yulDolMok.setName("율돌목");
+		yulDolMok.setGenera("역사");
+		yulDolMok.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
+		
+		Movie savedMovie = restTemplate.postForObject(baseUrl, yulDolMok,
+				Movie.class);
+		
+		// act
+		String url = baseUrl + "/" + savedMovie.getId();
+		Movie foundMovie = restTemplate.getForObject(url, Movie.class);
+		
+		// assert
+		assertNotNull(foundMovie);
+		assertThat(foundMovie.getId()).isEqualTo(savedMovie.getId());
+	}
+
+	@Test
 	@DisplayName("집적 시험 - 영화 목록")
 	void shouldReadListTest() {
 		Movie yulDolMok = new Movie();

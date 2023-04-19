@@ -1,13 +1,12 @@
 package space.bumtiger.test.integrate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Collection;
-import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -30,6 +29,29 @@ public class IntegrateTest {
 	private static RestTemplate restTemplate;
 	@Autowired
 	private MovieRepository repository;
+
+	@Test
+	@DisplayName("집적 시험 - 영화 정보 갱신")
+	void shouldUpdateMovieWorksWell() {
+		// arrange - 영화 생성, 저장, ID 확보
+		Movie yulDolMok = new Movie();
+		yulDolMok.setName("율돌목");
+		yulDolMok.setGenera("역사");
+		yulDolMok.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
+
+		yulDolMok = restTemplate.postForObject(baseUrl, yulDolMok, Movie.class);
+
+		// act
+		String newGenera = "인물";
+		yulDolMok.setGenera(newGenera);
+		restTemplate.put(baseUrl + "/{id}", yulDolMok, yulDolMok.getId());
+
+		// assert
+		Movie existingMovie = restTemplate
+				.getForObject(baseUrl + "/" + yulDolMok.getId(), Movie.class);
+		assertNotNull(existingMovie);
+		assertThat(newGenera).isEqualTo(existingMovie.getGenera());
+	}
 
 	@Test
 	@DisplayName("집적 시험 - 특정 영화 삭제")
@@ -57,28 +79,28 @@ public class IntegrateTest {
 
 		// assert
 		@SuppressWarnings("unchecked")
-		var listSize = ((Collection<?>)repository.findAll()).size();
-		
+		var listSize = ((Collection<?>) repository.findAll()).size();
+
 		assertThat(listSize).isEqualTo(1);
 	}
-	
+
 	@Test
 	@DisplayName("집적 시험 - 영화 ID로 찾기")
 	void shouldFindMovieByIdTest() {
-		
+
 		// arrange - 영화 생성, 저장, ID 확보
 		Movie yulDolMok = new Movie();
 		yulDolMok.setName("율돌목");
 		yulDolMok.setGenera("역사");
 		yulDolMok.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
-		
+
 		Movie savedMovie = restTemplate.postForObject(baseUrl, yulDolMok,
 				Movie.class);
-		
+
 		// act
 		String url = baseUrl + "/" + savedMovie.getId();
 		Movie foundMovie = restTemplate.getForObject(url, Movie.class);
-		
+
 		// assert
 		assertNotNull(foundMovie);
 		assertThat(foundMovie.getId()).isEqualTo(savedMovie.getId());

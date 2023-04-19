@@ -1,7 +1,6 @@
 package space.bumtiger.test.integrate;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.LocalDate;
@@ -36,14 +35,7 @@ public class IntegrateTest {
 	@Test
 	@DisplayName("집적 시험 - 영화 정보 갱신")
 	void shouldUpdateMovieWorksWell() {
-		// arrange - 영화 생성, 저장, ID 확보
-		Movie yulDolMok = new Movie();
-		yulDolMok.setName("율돌목");
-		yulDolMok.setGenera("역사");
-		yulDolMok.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
-
-		yulDolMok = restTemplate.postForObject(baseUrl, yulDolMok, Movie.class);
-
+		// arrange - 완료
 		// act
 		String newGenera = "인물";
 		yulDolMok.setGenera(newGenera);
@@ -60,28 +52,12 @@ public class IntegrateTest {
 	@DisplayName("집적 시험 - 특정 영화 삭제")
 	void shouldDeleteMovieByIdTest() {
 
-		// arrange - 영화 생성, 저장, ID 확보
-		Movie yulDolMok = new Movie();
-		yulDolMok.setName("율돌목");
-		yulDolMok.setGenera("역사");
-		yulDolMok.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
-
-		Movie movie2delete = restTemplate.postForObject(baseUrl, yulDolMok,
-				Movie.class);
-
-		Movie chunHyangJeon = new Movie();
-		chunHyangJeon.setName("춘향전");
-		chunHyangJeon.setGenera("로맨스");
-		chunHyangJeon.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
-
-		restTemplate.postForObject(baseUrl, chunHyangJeon, Movie.class);
-
+		// arrange - 완료
 		// act
-		String url = baseUrl + "/" + movie2delete.getId();
+		String url = baseUrl + "/" + yulDolMok.getId();
 		restTemplate.delete(url);
 
 		// assert
-		@SuppressWarnings("unchecked")
 		var listSize = ((Collection<?>) repository.findAll()).size();
 
 		assertThat(listSize).isEqualTo(1);
@@ -91,39 +67,19 @@ public class IntegrateTest {
 	@DisplayName("집적 시험 - 영화 ID로 찾기")
 	void shouldFindMovieByIdTest() {
 
-		// arrange - 영화 생성, 저장, ID 확보
-		Movie yulDolMok = new Movie();
-		yulDolMok.setName("율돌목");
-		yulDolMok.setGenera("역사");
-		yulDolMok.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
-
-		Movie savedMovie = restTemplate.postForObject(baseUrl, yulDolMok,
-				Movie.class);
-
+		// arrange - 완료
 		// act
-		String url = baseUrl + "/" + savedMovie.getId();
+		String url = baseUrl + "/" + yulDolMok.getId();
 		Movie foundMovie = restTemplate.getForObject(url, Movie.class);
 
 		// assert
 		assertNotNull(foundMovie);
-		assertThat(foundMovie.getId()).isEqualTo(savedMovie.getId());
+		assertThat(foundMovie.getId()).isEqualTo(yulDolMok.getId());
 	}
 
 	@Test
 	@DisplayName("집적 시험 - 영화 목록")
 	void shouldReadListTest() {
-		Movie yulDolMok = new Movie();
-		yulDolMok.setName("율돌목");
-		yulDolMok.setGenera("역사");
-		yulDolMok.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
-		restTemplate.postForObject(baseUrl, yulDolMok, Movie.class);
-
-		Movie chunHyangJeon = new Movie();
-		chunHyangJeon.setName("춘향전");
-		chunHyangJeon.setGenera("로맨스");
-		chunHyangJeon.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
-		restTemplate.postForObject(baseUrl, chunHyangJeon, Movie.class);
-
 		Movie[] savedMovie = restTemplate.getForObject(baseUrl, Movie[].class);
 
 		assertNotNull(savedMovie);
@@ -133,16 +89,11 @@ public class IntegrateTest {
 	@Test
 	@DisplayName("집적 시험 - 영화 저장")
 	void shouldCreateMovieTest() {
-		Movie yulDolMok = new Movie();
-		yulDolMok.setName("율돌목");
-		yulDolMok.setGenera("역사");
-		yulDolMok.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
+		yulDolMok.setId(null);
+		yulDolMok = restTemplate.postForObject(baseUrl, yulDolMok, Movie.class);
 
-		Movie savedMovie = restTemplate.postForObject(baseUrl, yulDolMok,
-				Movie.class);
-
-		assertNotNull(savedMovie);
-		assertThat(savedMovie.getId()).isNotNull();
+		assertNotNull(yulDolMok);
+		assertThat(yulDolMok.getId()).isNotNull();
 	}
 
 	@BeforeAll

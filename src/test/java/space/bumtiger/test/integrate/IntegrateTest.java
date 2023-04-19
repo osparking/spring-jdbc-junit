@@ -2,9 +2,11 @@ package space.bumtiger.test.integrate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
@@ -29,6 +31,37 @@ public class IntegrateTest {
 	@Autowired
 	private MovieRepository repository;
 
+	@Test
+	@DisplayName("집적 시험 - 특정 영화 삭제")
+	void shouldDeleteMovieByIdTest() {
+
+		// arrange - 영화 생성, 저장, ID 확보
+		Movie yulDolMok = new Movie();
+		yulDolMok.setName("율돌목");
+		yulDolMok.setGenera("역사");
+		yulDolMok.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
+
+		Movie movie2delete = restTemplate.postForObject(baseUrl, yulDolMok,
+				Movie.class);
+
+		Movie chunHyangJeon = new Movie();
+		chunHyangJeon.setName("춘향전");
+		chunHyangJeon.setGenera("로맨스");
+		chunHyangJeon.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
+
+		restTemplate.postForObject(baseUrl, chunHyangJeon, Movie.class);
+
+		// act
+		String url = baseUrl + "/" + movie2delete.getId();
+		restTemplate.delete(url);
+
+		// assert
+		@SuppressWarnings("unchecked")
+		var listSize = ((Collection<?>)repository.findAll()).size();
+		
+		assertThat(listSize).isEqualTo(1);
+	}
+	
 	@Test
 	@DisplayName("집적 시험 - 영화 ID로 찾기")
 	void shouldFindMovieByIdTest() {

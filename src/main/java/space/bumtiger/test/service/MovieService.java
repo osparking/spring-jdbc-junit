@@ -22,7 +22,7 @@ public class MovieService {
 
 	public Movie getMovieById(Long id) {
 		return movieRepository.findById(id).orElseThrow(
-				() -> new RuntimeException("찾으려 했던 영와 ID: " + id));
+				() -> new RuntimeException("찾으려 했던 영화 ID: " + id));
 	}
 
 	public Movie updateMovie(Movie movie, Long id) {

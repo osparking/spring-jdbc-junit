@@ -30,6 +30,9 @@ public class IntegrateTest {
 	@Autowired
 	private MovieRepository repository;
 
+	private Movie yulDolMok;
+	private Movie chunHyangJeon;
+
 	@Test
 	@DisplayName("집적 시험 - 영화 정보 갱신")
 	void shouldUpdateMovieWorksWell() {
@@ -154,6 +157,18 @@ public class IntegrateTest {
 		urlBuffer.append(port);
 		urlBuffer.append("/movies");
 		baseUrl = urlBuffer.toString();
+
+		yulDolMok = new Movie();
+		yulDolMok.setName("율돌목");
+		yulDolMok.setGenera("역사");
+		yulDolMok.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
+		yulDolMok = repository.save(yulDolMok);
+
+		chunHyangJeon = new Movie();
+		chunHyangJeon.setName("춘향전");
+		chunHyangJeon.setGenera("로맨스");
+		chunHyangJeon.setReleaseDate(LocalDate.of(2009, Month.NOVEMBER, 10));
+		chunHyangJeon = repository.save(chunHyangJeon);
 	}
 
 	@AfterEach
